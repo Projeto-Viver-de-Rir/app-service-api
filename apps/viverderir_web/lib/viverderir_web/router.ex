@@ -20,10 +20,18 @@ defmodule ViverderirWeb.Router do
     get "/", PageController, :home
   end
 
-  # Other scopes may use custom stacks.
-  # scope "/api", ViverderirWeb do
-  #   pipe_through :api
-  # end
+  scope "/api/v1", ViverderirWeb do
+    pipe_through :api
+
+    scope "/events" do
+      get "/", EventsController, :index
+      get "/:id", EventsController, :detail
+      post "/", EventsController, :create
+      put "/:id", EventsController, :update
+      patch "/:id", EventsController, :patch
+      delete "/:id", EventsController, :delete
+    end
+  end
 
   # Enable LiveDashboard and Swoosh mailbox preview in development
   if Application.compile_env(:viverderir_web, :dev_routes) do
