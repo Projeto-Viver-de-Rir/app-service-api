@@ -1,0 +1,13 @@
+{
+    "volunteers":[
+        {
+            "id": 1,
+            "name": "Volunteer 1",
+            "nickname": "Nickname 1",
+            "email": "volunteer1@gmail.com",
+            "phone": "1234567890",
+            "city": "City 1",
+            "status": "Status 1"
+        }
+    ]
+}
