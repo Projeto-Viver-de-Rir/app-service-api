@@ -31,6 +31,15 @@ defmodule ViverderirWeb.Router do
       patch "/:id", EventsController, :patch
       delete "/:id", EventsController, :delete
     end
+
+    scope "/volunteers" do
+      get "/", VolunteersController, :index
+      get "/:id", VolunteersController, :detail
+      post "/", VolunteersController, :create
+      put "/:id", VolunteersController, :update
+      patch "/:id", VolunteersController, :patch
+      delete "/:id", VolunteersController, :delete
+    end
   end
 
   # Enable LiveDashboard and Swoosh mailbox preview in development
