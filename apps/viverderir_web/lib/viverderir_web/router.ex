@@ -23,6 +23,14 @@ defmodule ViverderirWeb.Router do
   scope "/api/v1", ViverderirWeb do
     pipe_through :api
 
+    scope "/accounts" do
+      get "/", AccountsController, :get_me
+      post "/sign-in", AccountsController, :sign_in
+      post "/sign-up", AccountsController, :sign_up
+      post "/sign-out", AccountsController, :sign_out
+      delete "/delete", AccountsController, :delete
+    end
+
     scope "/events" do
       get "/", EventsController, :index
       get "/:id", EventsController, :detail
