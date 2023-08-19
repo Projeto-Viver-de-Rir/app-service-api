@@ -18,3 +18,9 @@ config :swoosh, :api_client, false
 
 # Initialize plugs at runtime for faster test compilation
 config :phoenix, :plug_init_mode, :runtime
+
+config :database, Database.Repo,
+  username: "postgres",
+  password: "postgres",
+  database: "database_test",
+  hostname: "localhost"
