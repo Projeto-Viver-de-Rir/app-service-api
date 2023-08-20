@@ -21,3 +21,9 @@ config :logger, level: :info
 
 # Runtime production configuration, including reading
 # of environment variables, is done on config/runtime.exs.
+
+config :database, Database.Repo,
+  username: "postgres",
+  password: "postgres",
+  database: "database_prod",
+  hostname: "localhost"
