@@ -76,5 +76,4 @@ defmodule Database.Domain.Configurations do
         deleted_at: DateTime.utc_now()
     }
   end
-
 end

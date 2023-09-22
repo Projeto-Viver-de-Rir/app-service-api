@@ -15,7 +15,8 @@ defmodule Database.Repo.Migrations.CreateConfigurations do
       add :updated_by, :bigint, null: true
       add :deleted_at, :utc_datetime, null: true
       add :deleted_by, :bigint, null: true
-  end
+    end
 
-  create index(:configurations, [:configuration_id], unique: true, name: :idx_configurations_configuration_id)
+    create index(:configurations, [:configuration_id], unique: true, name: :idx_configurations_configuration_id)
+  end
 end

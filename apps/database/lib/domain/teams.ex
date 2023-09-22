@@ -26,7 +26,6 @@ defmodule Database.Domain.Teams do
           name: String.t(),
           description: String.t() | nil,
           status: String.t(),
-
           created_at: DateTime.t() | nil,
           created_by: String.t() | nil,
           updated_at: DateTime.t() | nil,
@@ -77,5 +76,4 @@ defmodule Database.Domain.Teams do
         deleted_at: DateTime.utc_now()
     }
   end
-
 end

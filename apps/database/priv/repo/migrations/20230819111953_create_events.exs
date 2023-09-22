@@ -20,7 +20,8 @@ defmodule Database.Repo.Migrations.CreateEvents do
       add :updated_by, :bigint, null: true
       add :deleted_at, :utc_datetime, null: true
       add :deleted_by, :bigint, null: true
-  end
+    end
 
-  create index(:events, [:event_id], unique: true, name: :idx_events_event_id)
+    create index(:events, [:event_id], unique: true, name: :idx_events_event_id)
+  end
 end

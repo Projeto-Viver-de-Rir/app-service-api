@@ -91,5 +91,4 @@ defmodule Database.Domain.Events do
         deleted_at: DateTime.utc_now()
     }
   end
-
 end

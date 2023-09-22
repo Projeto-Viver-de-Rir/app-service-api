@@ -15,7 +15,8 @@ defmodule Database.Repo.Migrations.CreateTeams do
       add :updated_by, :bigint, null: true
       add :deleted_at, :utc_datetime, null: true
       add :deleted_by, :bigint, null: true
-  end
+    end
 
-  create index(:teams, [:team_id], unique: true, name: :idx_teams_team_id)
+    create index(:teams, [:team_id], unique: true, name: :idx_teams_team_id)
+  end
 end

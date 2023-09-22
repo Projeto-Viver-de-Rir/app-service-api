@@ -85,5 +85,4 @@ defmodule Database.Domain.Accounts do
         deleted_at: DateTime.utc_now()
     }
   end
-
 end

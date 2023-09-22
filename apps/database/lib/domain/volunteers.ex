@@ -107,5 +107,4 @@ defmodule Database.Domain.Volunteers do
         deleted_at: DateTime.utc_now()
     }
   end
-
 end

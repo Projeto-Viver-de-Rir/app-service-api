@@ -21,7 +21,8 @@ defmodule Database.Repo.Migrations.CreateDebts do
       add :updated_by, :bigint, null: true
       add :deleted_at, :utc_datetime, null: true
       add :deleted_by, :bigint, null: true
-  end
+    end
 
-  create index(:debts, [:debt_id], unique: true, name: :idx_debts_volunteer_id)
+    create index(:debts, [:debt_id], unique: true, name: :idx_debts_volunteer_id)
+  end
 end

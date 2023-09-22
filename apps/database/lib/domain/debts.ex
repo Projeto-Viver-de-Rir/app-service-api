@@ -33,7 +33,6 @@ defmodule Database.Domain.Debts do
           volunteer_id: non_neg_integer(),
           paid_at: DateTime.t() | nil,
           paid_by: non_neg_integer() | nil,
-
           created_at: DateTime.t() | nil,
           created_by: String.t() | nil,
           updated_at: DateTime.t() | nil,
@@ -88,5 +87,4 @@ defmodule Database.Domain.Debts do
         deleted_at: DateTime.utc_now()
     }
   end
-
 end

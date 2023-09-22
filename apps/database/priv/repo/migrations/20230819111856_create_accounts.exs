@@ -18,8 +18,9 @@ defmodule Database.Repo.Migrations.CreateAccounts do
       add :updated_by, :bigint, null: true
       add :deleted_at, :utc_datetime, null: true
       add :deleted_by, :bigint, null: true
-  end
+    end
 
-  create index(:accounts, [:account_id], unique: true, name: :idx_accounts_account_id)
-  create index(:accounts, [:email], unique: true, name: :idx_accounts_email)
+    create index(:accounts, [:account_id], unique: true, name: :idx_accounts_account_id)
+    create index(:accounts, [:email], unique: true, name: :idx_accounts_email)
+  end
 end
