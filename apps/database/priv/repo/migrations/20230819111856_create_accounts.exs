@@ -3,7 +3,6 @@ defmodule Database.Repo.Migrations.CreateAccounts do
 
   def change do
     create table(:accounts) do
-      add :account_id, :bigint, null: false
       add :name, :text, null: false
       add :email, :string, null: false
       add :email_confirmed, :boolean, null: false, default: false
@@ -19,8 +18,6 @@ defmodule Database.Repo.Migrations.CreateAccounts do
       add :deleted_at, :utc_datetime, null: true
       add :deleted_by, :bigint, null: true
     end
-
-    create index(:accounts, [:account_id], unique: true, name: :idx_accounts_account_id)
     create index(:accounts, [:email], unique: true, name: :idx_accounts_email)
   end
 end

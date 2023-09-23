@@ -3,10 +3,11 @@ defmodule Database.Domain.Volunteers do
   This represents the domain volunteer in our database.
   """
   use Ecto.Schema
+  import Ecto.Changeset
 
   @required_fields [
-    :volunteer_id,
-    :account_id,
+    :id,
+    # :account_id,
     :name,
     :identifier,
     :status,
@@ -32,8 +33,10 @@ defmodule Database.Domain.Volunteers do
                   :deleted_by
                 ]
 
+  @ud_fields @all_fields -- [:id, :created_at, :created_by]
+
   @type t :: %__MODULE__{
-          volunteer_id: non_neg_integer() | nil,
+          id: non_neg_integer() | nil,
           name: String.t(),
           nickname: String.t() | nil,
           email: String.t() | nil,
@@ -56,7 +59,6 @@ defmodule Database.Domain.Volunteers do
         }
 
   schema "volunteers" do
-    field(:volunteer_id, :integer)
     field(:name, :string)
     field(:nickname, :string)
     field(:email, :string)
@@ -72,39 +74,53 @@ defmodule Database.Domain.Volunteers do
     field(:status, :string)
 
     field(:created_at, :utc_datetime)
-    field(:created_by, :string)
+    field(:created_by, :integer)
     field(:updated_at, :utc_datetime)
-    field(:updated_by, :string)
+    field(:updated_by, :integer)
     field(:deleted_at, :utc_datetime)
-    field(:deleted_by, :string)
+    field(:deleted_by, :integer)
   end
 
-  @spec create(t(), integer()) :: t()
+  @spec validate(volunteer :: __MODULE__.t()) :: Ecto.Changeset.t()
+  def validate(volunteer) do
+    %__MODULE__{}
+    |> cast(Map.from_struct(volunteer), @all_fields)
+  end
+
+  @spec validate_ud(volunteer :: __MODULE__.t(), volunteer :: __MODULE__.t()) :: Ecto.Changeset.t()
+  def validate_ud(volunteer_old, volunteer_new) do
+    volunteer_old
+    |> cast(Map.from_struct(volunteer_new), @ud_fields)
+  end
+
+  @spec create(Database.Domain.Volunteers.t(), nil) :: Ecto.Changeset.t()
   def create(self = %__MODULE__{}, logged_account_id) do
     %__MODULE__{
       self
       | created_by: logged_account_id,
-        updated_by: logged_account_id
+        created_at: DateTime.utc_now()
     }
+    |> validate()
   end
 
-  @spec update(t(), integer()) :: t()
+  @spec update(Database.Domain.Volunteers.t(), nil) :: Ecto.Changeset.t()
   def update(self = %__MODULE__{}, logged_account_id) do
     %__MODULE__{
       self
-      | updated_at: logged_account_id,
+      | updated_at: DateTime.utc_now(),
         updated_by: logged_account_id
     }
   end
 
-  @spec delete(t(), integer()) :: t()
+  @spec delete(Database.Domain.Volunteers.t(), nil) :: Ecto.Changeset.t()
   def delete(self = %__MODULE__{}, logged_account_id) do
     %__MODULE__{
       self
-      | updated_at: logged_account_id,
+      | updated_at: DateTime.utc_now(),
         updated_by: logged_account_id,
         deleted_by: logged_account_id,
         deleted_at: DateTime.utc_now()
     }
+    |> validate()
   end
 end
