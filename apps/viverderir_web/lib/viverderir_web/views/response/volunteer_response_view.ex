@@ -1,10 +1,23 @@
 defmodule ViverderirWeb.Views.Response.VolunteerResponseView do
-  def render("detail.json", %{response: response_detail}) do
+  def render("index.json", %{
+    response: response_index
+      }) do
+        %{
+          volunteers: Enum.map(response_index, fn(volunteer) -> volunteer_item(volunteer) end),
+          max: 100
+        }
+  end
+
+  defp volunteer_item(volunteer) do
     %{
-      id: response_detail.id,
-      name: response_detail.name,
-      nickname: response_detail.nickname
+      id: volunteer.id,
+      name: volunteer.name,
+      nickname: volunteer.nickname
     }
+  end
+
+  def render("detail.json", %{response: response_detail}) do
+    volunteer_item(response_detail)
   end
 
   def render("create.json", %{response: response_create}) do

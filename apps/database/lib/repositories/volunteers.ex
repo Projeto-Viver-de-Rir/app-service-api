@@ -13,7 +13,9 @@ defmodule Database.Repositories.Volunteers do
           {:ok, list(Configuration.t())} | {:error, map()}
   def list_volunteers(_filter) do
     volunteers =
-      from(volunteers in Volunteers)
+      from(volunteers in Volunteers,
+      where: is_nil(volunteers.deleted_at)
+      )
       |> Repo.all()
 
     {:ok, volunteers}

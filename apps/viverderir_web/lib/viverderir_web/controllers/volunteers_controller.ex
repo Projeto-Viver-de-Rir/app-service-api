@@ -8,10 +8,18 @@ defmodule ViverderirWeb.VolunteersController do
   require Logger
 
   def index(conn, _params) do
-    {_status, list} = Volunteers.list_volunteers(%{})
+    Volunteers.list_volunteers(%{})
+    |> case do
+      {:ok, response} ->
+        conn
+        |> put_view(VolunteerResponseView)
+        |> render("index.json", response: response)
 
-    conn
-    |> send_resp(200, list)
+      {_, _} ->
+        conn
+        |> put_resp_content_type("application/json")
+        |> send_resp(500, "error")
+    end
   end
 
   def detail(conn, %{"id" => id}) do

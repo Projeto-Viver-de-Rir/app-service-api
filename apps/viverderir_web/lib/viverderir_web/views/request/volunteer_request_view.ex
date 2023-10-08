@@ -7,6 +7,7 @@ defmodule ViverderirWeb.Views.Request.VolunteerRequestView do
           {:error, :validation_failed} | {:ok, Domain.Volunteers.t()}
   def to_domain_from_create_request(params) do
     %{
+      id: nil,
       name: params["name"],
       nickname: params["nickname"],
       email: params["email"],

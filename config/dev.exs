@@ -72,4 +72,4 @@ config :database, Database.Repo,
   username: "postgres",
   password: "postgres",
   database: "database_dev",
-  hostname: "localhost"
+  hostname: "database_dev"
