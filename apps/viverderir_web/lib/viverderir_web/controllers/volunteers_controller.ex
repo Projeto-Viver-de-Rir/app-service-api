@@ -26,8 +26,7 @@ defmodule ViverderirWeb.VolunteersController do
         conn
         |> put_resp_content_type("application/json")
         |> send_resp(500, "error")
-
-      end
+    end
   end
 
   def create(conn, _params) do
@@ -37,18 +36,27 @@ defmodule ViverderirWeb.VolunteersController do
     logged_user_id = "1"
 
     Map.get(conn, :body_params)
-    |> VolunteerRequestView.to_domain_from_create_request(logged_user_id)
-    |> Volunteers.create_volunteer()
+    |> VolunteerRequestView.to_domain_from_create_request()
     |> case do
-      {:ok, response} ->
-        conn
-        |> put_view(VolunteerResponseView)
-        |> render("create.json", response: response)
+      {:ok, domain} ->
+        domain
+        |> Volunteers.create_volunteer(logged_user_id)
+        |> case do
+          {:ok, response} ->
+            conn
+            |> put_view(VolunteerResponseView)
+            |> render("create.json", response: response)
 
-      {_, _} ->
+          {_, _} ->
+            conn
+            |> put_resp_content_type("application/json")
+            |> send_resp(500, "error")
+        end
+
+      {:error, _validation_errors} ->
         conn
         |> put_resp_content_type("application/json")
-        |> send_resp(500, "error")
+        |> send_resp(400, "error")
     end
   end
 
@@ -59,34 +67,46 @@ defmodule ViverderirWeb.VolunteersController do
     logged_user_id = "1"
 
     Map.get(conn, :body_params)
-    |> VolunteerRequestView.to_domain_from_update_request(id, logged_user_id)
-    |> Volunteers.update_volunteer()
+    |> VolunteerRequestView.to_domain_from_update_request(id)
     |> case do
-      {:ok, response} ->
-        conn
-        |> put_view(VolunteerResponseView)
-        |> render("update.json", response: response)
+      {:ok, domain} ->
+        domain
+        |> Volunteers.update_volunteer(logged_user_id)
+        |> case do
+          {:ok, response} ->
+            conn
+            |> put_view(VolunteerResponseView)
+            |> render("update.json", response: response)
 
-      {_, _} ->
+          {_, _} ->
+            conn
+            |> put_resp_content_type("application/json")
+            |> send_resp(500, "error")
+        end
+
+      {:error, _validation_errors} ->
         conn
         |> put_resp_content_type("application/json")
-        |> send_resp(500, "error")
+        |> send_resp(400, "error")
     end
   end
 
   def patch(conn, %{"id" => id}) do
     Map.get(conn, :body_params)
 
-    {_status, item} = Volunteers.update_volunteer(%{id: id})
+    # {_status, item} = Volunteers.update_volunteer(%{id: id})
 
     conn
-    |> send_resp(200, item)
+    |> send_resp(501, "Not Implemented yet. ID: #{id}")
   end
 
   def delete(conn, %{"id" => id}) do
-    Map.get(conn, :body_params)
+    Logger.info("'Delete' requested for volunteers controller.")
 
-    Volunteers.delete_volunteer(id)
+    # TODO: extract from token or session
+    logged_user_id = "1"
+
+    Volunteers.delete_volunteer(id, logged_user_id)
 
     conn
     |> send_resp(204, "")

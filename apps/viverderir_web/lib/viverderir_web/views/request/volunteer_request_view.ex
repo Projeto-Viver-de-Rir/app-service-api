@@ -1,12 +1,12 @@
 defmodule ViverderirWeb.Views.Request.VolunteerRequestView do
-  alias Database.Domain.Volunteers
+  alias Domain.Volunteers
 
   require Logger
 
-  @spec to_domain_from_create_request(nil | maybe_improper_list | map, integer | nil) ::
-          Ecto.Changeset.t()
-  def to_domain_from_create_request(params, logged_user_id) do
-    %Volunteers{
+  @spec to_domain_from_create_request(nil | maybe_improper_list | map) ::
+          {:error, :validation_failed} | {:ok, Domain.Volunteers.t()}
+  def to_domain_from_create_request(params) do
+    %{
       name: params["name"],
       nickname: params["nickname"],
       email: params["email"],
@@ -21,16 +21,13 @@ defmodule ViverderirWeb.Views.Request.VolunteerRequestView do
       comments: params["comments"],
       status: params["status"]
     }
-    |> Volunteers.create(logged_user_id)
+    |> Volunteers.cast_domain()
   end
 
-  @spec to_domain_from_update_request(
-          nil | maybe_improper_list | map,
-          integer | nil,
-          integer | nil
-        ) :: map()
-  def to_domain_from_update_request(params, id, logged_user_id) do
-    %Volunteers{
+  @spec to_domain_from_update_request(nil | maybe_improper_list | map, any) ::
+          {:error, :validation_failed} | {:ok, Domain.Volunteers.t()}
+  def to_domain_from_update_request(params, id) do
+    %{
       id: id,
       name: params["name"],
       nickname: params["nickname"],
@@ -46,6 +43,6 @@ defmodule ViverderirWeb.Views.Request.VolunteerRequestView do
       comments: params["comments"],
       status: params["status"]
     }
-    |> Volunteers.update(logged_user_id)
+    |> Volunteers.cast_domain()
   end
 end

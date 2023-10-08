@@ -4,7 +4,7 @@ defmodule Database.Repositories.Volunteers do
   """
   import Ecto.Query
 
-  alias Database.Domain.Volunteers
+  alias Domain.Volunteers
   alias Database.Repo
 
   require Logger
@@ -47,40 +47,56 @@ defmodule Database.Repositories.Volunteers do
   #   end
   # end
 
-  @spec create(volunteer :: Volunteers.t()) ::
+  @spec create(volunteer :: Volunteers.t(), logged_user_id :: String.t()) ::
           {:ok, Volunteers.t()} | {:error, map()}
-  def create(volunteer) do
-    validation = Volunteers.validate(volunteer)
+  def create(volunteer, logged_user_id) do
+    changeset = Volunteers.changeset(volunteer, :create, logged_user_id)
 
-    case validation.valid? do
+    case changeset.valid? do
       false ->
-        {:error, validation}
+        {:error, changeset}
 
       true ->
-        Repo.insert(volunteer)
+        Repo.insert(changeset)
     end
   end
 
-  # @spec update(volunteer :: Volunteers.t()) ::
-  #         {:ok, Volunteers.t()} | {:error, map()}
-  def update(existing_data, replacement_data) do
-    Volunteers.validate_ud(existing_data, replacement_data)
-    |> Repo.update()
+  @spec update(
+          previous_data :: Volunteers.t(),
+          data :: Volunteers.t(),
+          logged_user_id :: String.t()
+        ) ::
+          {:ok, Volunteers.t()} | {:error, map()}
+  def update(previous_data, data, logged_user_id) do
+    changeset = Volunteers.changeset(previous_data, data, :update, logged_user_id)
+
+    case changeset.valid? do
+      false ->
+        {:error, changeset}
+
+      true ->
+        Repo.update(changeset)
+    end
   end
 
-  @spec delete(id :: integer()) ::
+  @spec soft_delete(previous_data :: Volunteers.t(), logged_user_id :: String.t()) ::
           {:ok, Volunteers.t()} | {:error, map()}
-  def delete(id) do
-    from(volunteers in Volunteers,
-      where: volunteers.id == ^id
-    )
-    |> Repo.one()
-    |> case do
-      nil -> {:ok}
-      volunteer ->
-        volunteer |>
-        Repo.delete()
-        {:ok}
-      end
+  def soft_delete(previous_data, logged_user_id) do
+    changeset = Volunteers.changeset(previous_data, previous_data, :delete, logged_user_id)
+
+    case changeset.valid? do
+      false ->
+        {:error, changeset}
+
+      true ->
+        Repo.update(changeset)
+    end
+  end
+
+  def hard_delete(volunteer) do
+    volunteer
+    |> Repo.delete()
+
+    {:ok}
   end
 end
