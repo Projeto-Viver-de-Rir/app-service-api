@@ -16,4 +16,4 @@ RUN mix do deps.get, deps.compile
 
 EXPOSE 4000
 
-CMD ["mix", "phx.server"]
+# CMD ["mix", "phx.server"]

@@ -5,7 +5,7 @@ defmodule Database.Domain.Events do
   use Ecto.Schema
 
   @required_fields [
-    :event_id,
+    :id,
     :name,
     :date_time,
     :occupancy,
@@ -27,7 +27,7 @@ defmodule Database.Domain.Events do
                 ]
 
   @type t :: %__MODULE__{
-          event_id: non_neg_integer() | nil,
+          id: non_neg_integer() | nil,
           name: String.t(),
           description: String.t() | nil,
           address: String.t() | nil,
@@ -45,7 +45,6 @@ defmodule Database.Domain.Events do
         }
 
   schema "events" do
-    field(:event_id, :integer)
     field(:name, :string)
     field(:description, :string)
     field(:address, :string)
@@ -91,5 +90,4 @@ defmodule Database.Domain.Events do
         deleted_at: DateTime.utc_now()
     }
   end
-
 end

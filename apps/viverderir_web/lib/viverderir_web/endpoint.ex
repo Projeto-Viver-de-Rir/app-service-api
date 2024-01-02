@@ -46,8 +46,10 @@ defmodule ViverderirWeb.Endpoint do
   plug Plug.MethodOverride
   plug Plug.Head
   plug Plug.Session, @session_options
+
   plug CORSPlug,
     origin: ["http://127.0.0.1:5173"],
     methods: ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"]
+
   plug ViverderirWeb.Router
 end

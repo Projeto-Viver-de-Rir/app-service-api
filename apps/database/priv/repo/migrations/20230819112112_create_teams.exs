@@ -3,7 +3,6 @@ defmodule Database.Repo.Migrations.CreateTeams do
 
   def change do
     create table(:teams) do
-      add :team_id, :bigint, null: false
       add :name, :text, null: false
       add :description, :text, null: true
       add :status, :string, null: false
@@ -15,7 +14,6 @@ defmodule Database.Repo.Migrations.CreateTeams do
       add :updated_by, :bigint, null: true
       add :deleted_at, :utc_datetime, null: true
       add :deleted_by, :bigint, null: true
+    end
   end
-
-  create index(:teams, [:team_id], unique: true, name: :idx_teams_team_id)
 end

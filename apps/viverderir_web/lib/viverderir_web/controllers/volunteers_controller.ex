@@ -1,53 +1,122 @@
 defmodule ViverderirWeb.VolunteersController do
   use ViverderirWeb, :controller
 
-  def index(conn, _params) do
-    list = ~s({"volunteers":[{"id":1,"name":"Volunteer 1","nickname":"Nickname 1","email":"volunteer1@gmail.com","phone":"1234567890","city":"City 1","status":"Status 1"},{"id":2,"name":"Volunteer 2","nickname":"Nickname 2","email":"volunteer2@gmail.com","phone":"1234567890","city":"City 2","status":"Status 1"}]})
+  alias ViverderirWeb.Views.Request.VolunteerRequestView
+  alias ViverderirWeb.Views.Response.VolunteerResponseView
+  alias ViverDeRir.Volunteers
 
-    conn
-    |> send_resp(200, list)
+  require Logger
+
+  def index(conn, _params) do
+    Volunteers.list_volunteers(%{})
+    |> case do
+      {:ok, response} ->
+        conn
+        |> put_view(VolunteerResponseView)
+        |> render("index.json", response: response)
+
+      {_, _} ->
+        conn
+        |> put_resp_content_type("application/json")
+        |> send_resp(500, "error")
+    end
   end
 
   def detail(conn, %{"id" => id}) do
-    item = ~s({"volunteer":{"id":1,"name":"Volunteer 1","nickname":"Nickname 1","email":"volunteer1@gmail.com","phone":"1234567890","address":"Address 1","city":"City 1","state":"State 1","zip":"12345","birth_date":"1990-01-01 00:00:00","identifier":"Identifier 1","availability":"Availability 1","comments":"Comment 1","status":"Status 1","created_at":"2019-01-01 00:00:00","created_by":1,"updated_at":"2019-01-01 00:00:00","updated_by":1,"deleted_at":null,"deleted_by":null}})
+    Volunteers.get_volunteer(id)
+    |> case do
+      {:ok, response} ->
+        conn
+        |> put_view(VolunteerResponseView)
+        |> render("detail.json", response: response)
 
-    conn
-    |> send_resp(200, item)
+      {_, _} ->
+        conn
+        |> put_resp_content_type("application/json")
+        |> send_resp(500, "error")
+    end
   end
 
   def create(conn, _params) do
+    Logger.info("'Create' requested for volunteers controller.")
+
+    # TODO: extract from token or session
+    logged_user_id = "1"
+
     Map.get(conn, :body_params)
+    |> VolunteerRequestView.to_domain_from_create_request()
+    |> case do
+      {:ok, domain} ->
+        domain
+        |> Volunteers.create_volunteer(logged_user_id)
+        |> case do
+          {:ok, response} ->
+            conn
+            |> put_view(VolunteerResponseView)
+            |> render("create.json", response: response)
 
-    item = ~s({"volunteer":{"id":1,"name":"Volunteer 1","nickname":"Nickname 1","email":"volunteer1@gmail.com","phone":"1234567890","address":"Address 1","city":"City 1","state":"State 1","zip":"12345","birth_date":"1990-01-01 00:00:00","identifier":"Identifier 1","availability":"Availability 1","comments":"Comment 1","status":"Status 1","created_at":"2019-01-01 00:00:00","created_by":1,"updated_at":"2019-01-01 00:00:00","updated_by":1,"deleted_at":null,"deleted_by":null}})
+          {_, _} ->
+            conn
+            |> put_resp_content_type("application/json")
+            |> send_resp(500, "error")
+        end
 
-    conn
-    |> send_resp(201, item)
+      {:error, _validation_errors} ->
+        conn
+        |> put_resp_content_type("application/json")
+        |> send_resp(400, "error")
+    end
   end
 
   def update(conn, %{"id" => id}) do
+    Logger.info("'Update' requested for volunteers controller.")
+
+    # TODO: extract from token or session
+    logged_user_id = "1"
+
     Map.get(conn, :body_params)
+    |> VolunteerRequestView.to_domain_from_update_request(id)
+    |> case do
+      {:ok, domain} ->
+        domain
+        |> Volunteers.update_volunteer(logged_user_id)
+        |> case do
+          {:ok, response} ->
+            conn
+            |> put_view(VolunteerResponseView)
+            |> render("update.json", response: response)
 
-    item = ~s({"volunteer":{"id":1,"name":"Volunteer 1","nickname":"Nickname 1","email":"volunteer1@gmail.com","phone":"1234567890","address":"Address 1","city":"City 1","state":"State 1","zip":"12345","birth_date":"1990-01-01 00:00:00","identifier":"Identifier 1","availability":"Availability 1","comments":"Comment 1","status":"Status 1","created_at":"2019-01-01 00:00:00","created_by":1,"updated_at":"2019-01-01 00:00:00","updated_by":1,"deleted_at":null,"deleted_by":null}})
+          {_, _} ->
+            conn
+            |> put_resp_content_type("application/json")
+            |> send_resp(500, "error")
+        end
 
-    conn
-    |> send_resp(200, item)
+      {:error, _validation_errors} ->
+        conn
+        |> put_resp_content_type("application/json")
+        |> send_resp(400, "error")
+    end
   end
 
   def patch(conn, %{"id" => id}) do
     Map.get(conn, :body_params)
 
-    item = ~s({"volunteer":{"id":1,"name":"Volunteer 1","nickname":"Nickname 1","email":"volunteer1@gmail.com","phone":"1234567890","address":"Address 1","city":"City 1","state":"State 1","zip":"12345","birth_date":"1990-01-01 00:00:00","identifier":"Identifier 1","availability":"Availability 1","comments":"Comment 1","status":"Status 1","created_at":"2019-01-01 00:00:00","created_by":1,"updated_at":"2019-01-01 00:00:00","updated_by":1,"deleted_at":null,"deleted_by":null}})
+    # {_status, item} = Volunteers.update_volunteer(%{id: id})
 
     conn
-    |> send_resp(200, item)
+    |> send_resp(501, "Not Implemented yet. ID: #{id}")
   end
 
   def delete(conn, %{"id" => id}) do
-    Map.get(conn, :body_params)
+    Logger.info("'Delete' requested for volunteers controller.")
 
-    item = ~s({"volunteer":{"id":1,"name":"Volunteer 1","nickname":"Nickname 1","email":"volunteer1@gmail.com","phone":"1234567890","address":"Address 1","city":"City 1","state":"State 1","zip":"12345","birth_date":"1990-01-01 00:00:00","identifier":"Identifier 1","availability":"Availability 1","comments":"Comment 1","status":"Status 1","created_at":"2019-01-01 00:00:00","created_by":1,"updated_at":"2019-01-01 00:00:00","updated_by":1,"deleted_at":null,"deleted_by":null}})
+    # TODO: extract from token or session
+    logged_user_id = "1"
+
+    Volunteers.delete_volunteer(id, logged_user_id)
 
     conn
-    |> send_resp(204, item)
+    |> send_resp(204, "")
   end
 end

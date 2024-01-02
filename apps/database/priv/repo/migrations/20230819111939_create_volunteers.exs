@@ -3,7 +3,6 @@ defmodule Database.Repo.Migrations.CreateVolunteers do
 
   def change do
     create table(:volunteers) do
-      add :volunteer_id, :bigint, null: false
       add :name, :text, null: false
       add :nickname, :text, null: true
       add :email, :string, null: true
@@ -18,8 +17,8 @@ defmodule Database.Repo.Migrations.CreateVolunteers do
       add :comments, :string, null: true
       add :status, :string, null: false
 
-      ## Foreign Key
-      add :account_id, references(:accounts, on_delete: :delete_all)
+      # ## Foreign Key
+      # add :account_id, references(:accounts, on_delete: :delete_all)
 
       ## Audit related fields
       add :created_at, :utc_datetime, null: false
@@ -28,7 +27,6 @@ defmodule Database.Repo.Migrations.CreateVolunteers do
       add :updated_by, :bigint, null: true
       add :deleted_at, :utc_datetime, null: true
       add :deleted_by, :bigint, null: true
+    end
   end
-
-  create index(:volunteers, [:volunteer_id], unique: true, name: :idx_volunteers_volunteer_id)
 end

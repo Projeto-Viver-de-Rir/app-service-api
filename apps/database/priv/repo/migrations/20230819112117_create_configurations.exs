@@ -3,7 +3,6 @@ defmodule Database.Repo.Migrations.CreateConfigurations do
 
   def change do
     create table(:configurations) do
-      add :configuration_id, :bigint, null: false
       add :name, :text, null: false
       add :description, :text, null: true
       add :properties, :map, null: false, default: %{}
@@ -15,7 +14,6 @@ defmodule Database.Repo.Migrations.CreateConfigurations do
       add :updated_by, :bigint, null: true
       add :deleted_at, :utc_datetime, null: true
       add :deleted_by, :bigint, null: true
+    end
   end
-
-  create index(:configurations, [:configuration_id], unique: true, name: :idx_configurations_configuration_id)
 end

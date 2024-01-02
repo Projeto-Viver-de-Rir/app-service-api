@@ -5,7 +5,7 @@ defmodule Database.Domain.Configurations do
   use Ecto.Schema
 
   @required_fields [
-    :configuration_id,
+    :id,
     :name,
     :properties,
     :created_at,
@@ -22,7 +22,7 @@ defmodule Database.Domain.Configurations do
                 ]
 
   @type t :: %__MODULE__{
-          configuration_id: non_neg_integer() | nil,
+          id: non_neg_integer() | nil,
           name: String.t(),
           description: String.t() | nil,
           properties: Map.t(),
@@ -35,7 +35,6 @@ defmodule Database.Domain.Configurations do
         }
 
   schema "configurations" do
-    field(:configuration_id, :integer)
     field(:name, :string)
     field(:description, :string)
     field(:properties, :map)
@@ -76,5 +75,4 @@ defmodule Database.Domain.Configurations do
         deleted_at: DateTime.utc_now()
     }
   end
-
 end

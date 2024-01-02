@@ -5,7 +5,7 @@ defmodule Database.Domain.Accounts do
   use Ecto.Schema
 
   @required_fields [
-    :account_id,
+    :id,
     :name,
     :email,
     :email_confirmed,
@@ -25,7 +25,7 @@ defmodule Database.Domain.Accounts do
                 ]
 
   @type t :: %__MODULE__{
-          account_id: non_neg_integer() | nil,
+          id: non_neg_integer() | nil,
           name: String.t(),
           email: String.t(),
           email_confirmed: boolean(),
@@ -41,7 +41,6 @@ defmodule Database.Domain.Accounts do
         }
 
   schema "accounts" do
-    field(:account_id, :integer)
     field(:name, :string)
     field(:email, :string)
     field(:email_confirmed, :boolean)
@@ -85,5 +84,4 @@ defmodule Database.Domain.Accounts do
         deleted_at: DateTime.utc_now()
     }
   end
-
 end

@@ -5,7 +5,7 @@ defmodule Database.Domain.Debts do
   use Ecto.Schema
 
   @required_fields [
-    :debt_id,
+    :id,
     :name,
     :amount,
     :due_date,
@@ -25,7 +25,7 @@ defmodule Database.Domain.Debts do
                 ]
 
   @type t :: %__MODULE__{
-          debt_id: non_neg_integer() | nil,
+          id: non_neg_integer() | nil,
           name: String.t(),
           description: String.t() | nil,
           amount: float(),
@@ -33,7 +33,6 @@ defmodule Database.Domain.Debts do
           volunteer_id: non_neg_integer(),
           paid_at: DateTime.t() | nil,
           paid_by: non_neg_integer() | nil,
-
           created_at: DateTime.t() | nil,
           created_by: String.t() | nil,
           updated_at: DateTime.t() | nil,
@@ -43,7 +42,6 @@ defmodule Database.Domain.Debts do
         }
 
   schema "debts" do
-    field(:debt_id, :integer)
     field(:name, :string)
     field(:description, :string)
     field(:amount, :float)
@@ -88,5 +86,4 @@ defmodule Database.Domain.Debts do
         deleted_at: DateTime.utc_now()
     }
   end
-
 end

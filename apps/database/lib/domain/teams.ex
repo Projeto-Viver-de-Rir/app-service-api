@@ -5,7 +5,7 @@ defmodule Database.Domain.Teams do
   use Ecto.Schema
 
   @required_fields [
-    :team_id,
+    :id,
     :name,
     :status,
     :created_at,
@@ -22,11 +22,10 @@ defmodule Database.Domain.Teams do
                 ]
 
   @type t :: %__MODULE__{
-          team_id: non_neg_integer() | nil,
+          id: non_neg_integer() | nil,
           name: String.t(),
           description: String.t() | nil,
           status: String.t(),
-
           created_at: DateTime.t() | nil,
           created_by: String.t() | nil,
           updated_at: DateTime.t() | nil,
@@ -36,7 +35,6 @@ defmodule Database.Domain.Teams do
         }
 
   schema "teams" do
-    field(:team_id, :integer)
     field(:name, :string)
     field(:description, :string)
     field(:status, :string)
@@ -77,5 +75,4 @@ defmodule Database.Domain.Teams do
         deleted_at: DateTime.utc_now()
     }
   end
-
 end
