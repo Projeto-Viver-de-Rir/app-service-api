@@ -6,14 +6,15 @@ defmodule Database.Repo.Migrations.CreateTeams do
       add :name, :text, null: false
       add :description, :text, null: true
       add :status, :string, null: false
+      add :members, {:array, :integer}, null: false, default: []
 
       ## Audit related fields
       add :created_at, :utc_datetime, null: false
-      add :created_by, :bigint, null: false
+      add :created_by, :string, null: false
       add :updated_at, :utc_datetime, null: true
-      add :updated_by, :bigint, null: true
+      add :updated_by, :string, null: true
       add :deleted_at, :utc_datetime, null: true
-      add :deleted_by, :bigint, null: true
+      add :deleted_by, :string, null: true
     end
   end
 end

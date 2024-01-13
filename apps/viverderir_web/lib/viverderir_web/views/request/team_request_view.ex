@@ -10,7 +10,8 @@ defmodule ViverderirWeb.Views.Request.TeamRequestView do
       id: nil,
       name: params["name"],
       description: params["description"],
-      status: params["status"]
+      status: params["status"],
+      members: params["members"]
     }
     |> Teams.cast_domain()
   end
@@ -22,7 +23,8 @@ defmodule ViverderirWeb.Views.Request.TeamRequestView do
       id: id,
       name: params["name"],
       description: params["description"],
-      status: params["status"]
+      status: params["status"],
+      members: params["members"]
     }
     |> Teams.cast_domain()
   end

@@ -7,6 +7,7 @@ defmodule Domain.Debts do
     :name,
     :amount,
     :due_date,
+    :volunteer_id,
     :created_at,
     :created_by
   ]
@@ -45,8 +46,8 @@ defmodule Domain.Debts do
     field(:amount, :float)
     field(:due_date, :utc_datetime)
     field(:paid_at, :utc_datetime)
-    field(:volunteer_id, :integer)
-    field(:paid_by, :integer)
+    belongs_to(:volunteer, Domain.Volunteers, foreign_key: :volunteer_id)
+    belongs_to(:receiver, Domain.Volunteers, foreign_key: :paid_by)
 
     field(:created_at, :utc_datetime)
     field(:created_by, :string)

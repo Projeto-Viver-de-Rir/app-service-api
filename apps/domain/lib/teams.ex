@@ -24,6 +24,7 @@ defmodule Domain.Teams do
           name: String.t(),
           description: String.t() | nil,
           status: String.t(),
+          members: {:array, :integer},
           created_at: DateTime.t() | nil,
           created_by: String.t() | nil,
           updated_at: DateTime.t() | nil,
@@ -36,6 +37,7 @@ defmodule Domain.Teams do
     field(:name, :string)
     field(:description, :string)
     field(:status, :string)
+    field(:members, {:array, :integer})
 
     field(:created_at, :utc_datetime)
     field(:created_by, :string)

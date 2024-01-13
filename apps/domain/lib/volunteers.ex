@@ -4,7 +4,7 @@ defmodule Domain.Volunteers do
 
   @required_fields [
     :id,
-    # :account_id,
+    :account_id,
     :name,
     :identifier,
     :status,
@@ -45,6 +45,7 @@ defmodule Domain.Volunteers do
             availability: String.t() | nil,
             comments: String.t() | nil,
             status: String.t() | nil,
+            account_id: non_neg_integer(),
             created_at: DateTime.t() | nil,
             created_by: String.t() | nil,
             updated_at: DateTime.t() | nil,
@@ -67,13 +68,14 @@ defmodule Domain.Volunteers do
     field(:availability, :string)
     field(:comments, :string)
     field(:status, :string)
+    belongs_to(:account, Domain.Accounts, foreign_key: :account_id)
 
     field(:created_at, :utc_datetime)
-    field(:created_by, :integer)
+    field(:created_by, :string)
     field(:updated_at, :utc_datetime)
-    field(:updated_by, :integer)
+    field(:updated_by, :string)
     field(:deleted_at, :utc_datetime)
-    field(:deleted_by, :integer)
+    field(:deleted_by, :string)
   end
 
   @spec cast_domain(map()) :: {:ok, t()} | {:error, atom()}
@@ -94,7 +96,8 @@ defmodule Domain.Volunteers do
          identifier: params.identifier,
          availability: params.availability,
          comments: params.comments,
-         status: params.status
+         status: params.status,
+         account_id: params.account_id
        }}
     else
       {:error, _} ->

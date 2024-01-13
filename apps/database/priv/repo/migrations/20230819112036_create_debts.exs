@@ -10,16 +10,16 @@ defmodule Database.Repo.Migrations.CreateDebts do
       add :paid_at, :utc_datetime, null: true
 
       ## Foreign Key
-      add :volunteer_id, references(:volunteers, on_delete: :delete_all)
-      add :paid_by, references(:volunteers, on_delete: :nothing)
+      add :volunteer_id, references(:volunteers, on_delete: :delete_all, type: :integer), null: false
+      add :paid_by, references(:volunteers, on_delete: :nothing, type: :integer), null: false
 
       ## Audit related fields
       add :created_at, :utc_datetime, null: false
-      add :created_by, :integer, null: false
+      add :created_by, :string, null: false
       add :updated_at, :utc_datetime, null: true
-      add :updated_by, :bigint, null: true
+      add :updated_by, :string, null: true
       add :deleted_at, :utc_datetime, null: true
-      add :deleted_by, :bigint, null: true
+      add :deleted_by, :string, null: true
     end
   end
 end

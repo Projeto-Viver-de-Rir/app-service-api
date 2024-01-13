@@ -45,6 +45,7 @@ defmodule Domain.Accounts do
     field(:password_hash, :string)
     field(:access_failed_count, :integer)
     field(:photo_url, :string)
+    has_one(:volunteers, Domain.Volunteers)
 
     field(:created_at, :utc_datetime)
     field(:created_by, :string)
