@@ -16,17 +16,15 @@ defmodule Database.Repo.Migrations.CreateVolunteers do
       add :availability, :string, null: true
       add :comments, :string, null: true
       add :status, :string, null: false
-
-      # ## Foreign Key
-      # add :account_id, references(:accounts, on_delete: :delete_all)
+      add :account_id, references(:accounts, on_delete: :delete_all, type: :integer), null: false
 
       ## Audit related fields
       add :created_at, :utc_datetime, null: false
-      add :created_by, :bigint, null: false
+      add :created_by, :string, null: false
       add :updated_at, :utc_datetime, null: true
-      add :updated_by, :bigint, null: true
+      add :updated_by, :string, null: true
       add :deleted_at, :utc_datetime, null: true
-      add :deleted_by, :bigint, null: true
+      add :deleted_by, :string, null: true
     end
   end
 end

@@ -1,12 +1,12 @@
-defmodule Domain.Volunteers do
+defmodule Domain.Events do
   use Ecto.Schema
   import Ecto.Changeset
 
   @required_fields [
     :id,
-    :account_id,
     :name,
-    :identifier,
+    :date_time,
+    :occupancy,
     :status,
     :created_at,
     :created_by
@@ -14,16 +14,10 @@ defmodule Domain.Volunteers do
 
   @all_fields @required_fields ++
                 [
-                  :nickname,
-                  :email,
-                  :phone,
+                  :description,
                   :address,
                   :city,
-                  :state,
-                  :zip,
-                  :birth_date,
-                  :availability,
-                  :comments,
+                  :meeting_point,
                   :updated_at,
                   :updated_by,
                   :deleted_at,
@@ -31,44 +25,32 @@ defmodule Domain.Volunteers do
                 ]
 
   @opaque t :: %__MODULE__{
-            id: non_neg_integer() | nil,
-            name: String.t(),
-            nickname: String.t() | nil,
-            email: String.t() | nil,
-            phone: String.t() | nil,
-            address: String.t() | nil,
-            city: String.t() | nil,
-            state: String.t() | nil,
-            zip: String.t() | nil,
-            birth_date: DateTime.t() | nil,
-            identifier: String.t(),
-            availability: String.t() | nil,
-            comments: String.t() | nil,
-            status: String.t() | nil,
-            account_id: non_neg_integer(),
-            created_at: DateTime.t() | nil,
-            created_by: String.t() | nil,
-            updated_at: DateTime.t() | nil,
-            updated_by: String.t() | nil,
-            deleted_at: DateTime.t() | nil,
-            deleted_by: String.t() | nil
+          id: non_neg_integer() | nil,
+          name: String.t(),
+          description: String.t() | nil,
+          address: String.t() | nil,
+          city: String.t() | nil,
+          meeting_point: String.t() | nil,
+          date_time: DateTime.t(),
+          occupancy: non_neg_integer(),
+          status: String.t() | nil,
+          created_at: DateTime.t() | nil,
+          created_by: String.t() | nil,
+          updated_at: DateTime.t() | nil,
+          updated_by: String.t() | nil,
+          deleted_at: DateTime.t() | nil,
+          deleted_by: String.t() | nil
           }
 
-  schema "volunteers" do
+  schema "events" do
     field(:name, :string)
-    field(:nickname, :string)
-    field(:email, :string)
-    field(:phone, :string)
+    field(:description, :string)
     field(:address, :string)
     field(:city, :string)
-    field(:state, :string)
-    field(:zip, :string)
-    field(:birth_date, :utc_datetime)
-    field(:identifier, :string)
-    field(:availability, :string)
-    field(:comments, :string)
+    field(:meeting_point, :string)
+    field(:date_time, :utc_datetime)
+    field(:occupancy, :integer)
     field(:status, :string)
-    belongs_to(:account, Domain.Accounts, foreign_key: :account_id)
 
     field(:created_at, :utc_datetime)
     field(:created_by, :string)
@@ -85,19 +67,13 @@ defmodule Domain.Volunteers do
        %__MODULE__{
          id: params.id,
          name: params.name,
-         nickname: params.nickname,
-         email: params.email,
-         phone: params.phone,
+         description: params.description,
          address: params.address,
          city: params.city,
-         state: params.state,
-         zip: params.zip,
-         birth_date: params.birth_date,
-         identifier: params.identifier,
-         availability: params.availability,
-         comments: params.comments,
-         status: params.status,
-         account_id: params.account_id
+         meeting_point: params.meeting_point,
+         date_time: params.date_time,
+         occupancy: params.occupancy,
+         status: params.status
        }}
     else
       {:error, _} ->
@@ -113,7 +89,7 @@ defmodule Domain.Volunteers do
     end
   end
 
-  @spec changeset(Domain.Volunteers.t(), :create, String.t()) :: Ecto.Changeset.t()
+  @spec changeset(Domain.Events.t(), :create, String.t()) :: Ecto.Changeset.t()
   def changeset(data, :create, logged_user_id) do
     params = %__MODULE__{
       data
@@ -126,8 +102,8 @@ defmodule Domain.Volunteers do
   end
 
   @spec changeset(
-          Domain.Volunteers.t(),
-          Domain.Volunteers.t(),
+          Domain.Events.t(),
+          Domain.Events.t(),
           :delete | :update,
           String.t()
         ) :: Ecto.Changeset.t()

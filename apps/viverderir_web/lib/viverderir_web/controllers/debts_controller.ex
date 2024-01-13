@@ -1,18 +1,18 @@
-defmodule ViverderirWeb.EventsController do
+defmodule ViverderirWeb.DebtsController do
   use ViverderirWeb, :controller
 
-  alias ViverderirWeb.Views.Request.EventRequestView
-  alias ViverderirWeb.Views.Response.EventResponseView
-  alias ViverDeRir.Events
+  alias ViverderirWeb.Views.Request.DebtRequestView
+  alias ViverderirWeb.Views.Response.DebtResponseView
+  alias ViverDeRir.Debts
 
   require Logger
 
   def index(conn, _params) do
-    Events.list_events(%{})
+    Debts.list_debts(%{})
     |> case do
       {:ok, response} ->
         conn
-        |> put_view(EventResponseView)
+        |> put_view(DebtResponseView)
         |> render("index.json", response: response)
 
       {_, _} ->
@@ -23,11 +23,11 @@ defmodule ViverderirWeb.EventsController do
   end
 
   def detail(conn, %{"id" => id}) do
-    Events.get_event(id)
+    Debts.get_debt(id)
     |> case do
       {:ok, response} ->
         conn
-        |> put_view(EventResponseView)
+        |> put_view(DebtResponseView)
         |> render("detail.json", response: response)
 
       {_, _} ->
@@ -38,21 +38,21 @@ defmodule ViverderirWeb.EventsController do
   end
 
   def create(conn, _params) do
-    Logger.info("'Create' requested for events controller.")
+    Logger.info("'Create' requested for debts controller.")
 
     # TODO: extract from token or session
     logged_user_id = "1"
 
     Map.get(conn, :body_params)
-    |> EventRequestView.to_domain_from_create_request()
+    |> DebtRequestView.to_domain_from_create_request()
     |> case do
       {:ok, domain} ->
         domain
-        |> Events.create_event(logged_user_id)
+        |> Debts.create_debt(logged_user_id)
         |> case do
           {:ok, response} ->
             conn
-            |> put_view(EventResponseView)
+            |> put_view(DebtResponseView)
             |> render("create.json", response: response)
 
           {_, _} ->
@@ -69,21 +69,21 @@ defmodule ViverderirWeb.EventsController do
   end
 
   def update(conn, %{"id" => id}) do
-    Logger.info("'Update' requested for events controller.")
+    Logger.info("'Update' requested for debts controller.")
 
     # TODO: extract from token or session
     logged_user_id = "1"
 
     Map.get(conn, :body_params)
-    |> EventRequestView.to_domain_from_update_request(id)
+    |> DebtRequestView.to_domain_from_update_request(id)
     |> case do
       {:ok, domain} ->
         domain
-        |> Events.update_event(logged_user_id)
+        |> Debts.update_debt(logged_user_id)
         |> case do
           {:ok, response} ->
             conn
-            |> put_view(EventResponseView)
+            |> put_view(DebtResponseView)
             |> render("update.json", response: response)
 
           {_, _} ->
@@ -102,19 +102,19 @@ defmodule ViverderirWeb.EventsController do
   def patch(conn, %{"id" => id}) do
     Map.get(conn, :body_params)
 
-    # {_status, item} = Events.update_event(%{id: id})
+    # {_status, item} = Debts.update_debt(%{id: id})
 
     conn
     |> send_resp(501, "Not Implemented yet. ID: #{id}")
   end
 
   def delete(conn, %{"id" => id}) do
-    Logger.info("'Delete' requested for events controller.")
+    Logger.info("'Delete' requested for debts controller.")
 
     # TODO: extract from token or session
     logged_user_id = "1"
 
-    Events.delete_event(id, logged_user_id)
+    Debts.delete_debt(id, logged_user_id)
 
     conn
     |> send_resp(204, "")

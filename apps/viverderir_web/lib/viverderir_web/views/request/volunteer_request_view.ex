@@ -20,7 +20,8 @@ defmodule ViverderirWeb.Views.Request.VolunteerRequestView do
       identifier: params["identifier"],
       availability: params["availability"],
       comments: params["comments"],
-      status: params["status"]
+      status: params["status"],
+      account_id: params["account_id"]
     }
     |> Volunteers.cast_domain()
   end
@@ -42,7 +43,8 @@ defmodule ViverderirWeb.Views.Request.VolunteerRequestView do
       identifier: params["identifier"],
       availability: params["availability"],
       comments: params["comments"],
-      status: params["status"]
+      status: params["status"],
+      account_id: params["account_id"]
     }
     |> Volunteers.cast_domain()
   end

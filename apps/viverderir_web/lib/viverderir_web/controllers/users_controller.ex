@@ -1,18 +1,18 @@
-defmodule ViverderirWeb.EventsController do
+defmodule ViverderirWeb.UsersController do
   use ViverderirWeb, :controller
 
-  alias ViverderirWeb.Views.Request.EventRequestView
-  alias ViverderirWeb.Views.Response.EventResponseView
-  alias ViverDeRir.Events
+  alias ViverderirWeb.Views.Request.UserRequestView
+  alias ViverderirWeb.Views.Response.UserResponseView
+  alias ViverDeRir.Accounts
 
   require Logger
 
   def index(conn, _params) do
-    Events.list_events(%{})
+    Accounts.list_accounts(%{})
     |> case do
       {:ok, response} ->
         conn
-        |> put_view(EventResponseView)
+        |> put_view(UserResponseView)
         |> render("index.json", response: response)
 
       {_, _} ->
@@ -23,11 +23,11 @@ defmodule ViverderirWeb.EventsController do
   end
 
   def detail(conn, %{"id" => id}) do
-    Events.get_event(id)
+    Accounts.get_account(id)
     |> case do
       {:ok, response} ->
         conn
-        |> put_view(EventResponseView)
+        |> put_view(UserResponseView)
         |> render("detail.json", response: response)
 
       {_, _} ->
@@ -38,21 +38,21 @@ defmodule ViverderirWeb.EventsController do
   end
 
   def create(conn, _params) do
-    Logger.info("'Create' requested for events controller.")
+    Logger.info("'Create' requested for accounts controller.")
 
     # TODO: extract from token or session
     logged_user_id = "1"
 
     Map.get(conn, :body_params)
-    |> EventRequestView.to_domain_from_create_request()
+    |> UserRequestView.to_domain_from_create_request()
     |> case do
       {:ok, domain} ->
         domain
-        |> Events.create_event(logged_user_id)
+        |> Accounts.create_account(logged_user_id)
         |> case do
           {:ok, response} ->
             conn
-            |> put_view(EventResponseView)
+            |> put_view(UserResponseView)
             |> render("create.json", response: response)
 
           {_, _} ->
@@ -69,21 +69,21 @@ defmodule ViverderirWeb.EventsController do
   end
 
   def update(conn, %{"id" => id}) do
-    Logger.info("'Update' requested for events controller.")
+    Logger.info("'Update' requested for accounts controller.")
 
     # TODO: extract from token or session
     logged_user_id = "1"
 
     Map.get(conn, :body_params)
-    |> EventRequestView.to_domain_from_update_request(id)
+    |> UserRequestView.to_domain_from_update_request(id)
     |> case do
       {:ok, domain} ->
         domain
-        |> Events.update_event(logged_user_id)
+        |> Accounts.update_account(logged_user_id)
         |> case do
           {:ok, response} ->
             conn
-            |> put_view(EventResponseView)
+            |> put_view(UserResponseView)
             |> render("update.json", response: response)
 
           {_, _} ->
@@ -102,19 +102,19 @@ defmodule ViverderirWeb.EventsController do
   def patch(conn, %{"id" => id}) do
     Map.get(conn, :body_params)
 
-    # {_status, item} = Events.update_event(%{id: id})
+    # {_status, item} = Accounts.update_account(%{id: id})
 
     conn
     |> send_resp(501, "Not Implemented yet. ID: #{id}")
   end
 
   def delete(conn, %{"id" => id}) do
-    Logger.info("'Delete' requested for events controller.")
+    Logger.info("'Delete' requested for accounts controller.")
 
     # TODO: extract from token or session
     logged_user_id = "1"
 
-    Events.delete_event(id, logged_user_id)
+    Accounts.delete_account(id, logged_user_id)
 
     conn
     |> send_resp(204, "")
