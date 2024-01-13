@@ -1,23 +1,23 @@
-defmodule ViverderirWeb.Views.Response.AccountResponseView do
+defmodule ViverderirWeb.Views.Response.UserResponseView do
   def render("index.json", %{
     response: response_index
       }) do
         %{
-          accounts: Enum.map(response_index, fn(account) -> account_item(account) end),
+          users: Enum.map(response_index, fn(user) -> user_item(user) end),
           max: 100
         }
   end
 
-  defp account_item(account) do
+  defp user_item(user) do
     %{
-      id: account.id,
-      name: account.name,
-      nickname: account.nickname
+      id: user.id,
+      name: user.name,
+      nickname: user.nickname
     }
   end
 
   def render("detail.json", %{response: response_detail}) do
-    account_item(response_detail)
+    user_item(response_detail)
   end
 
   def render("create.json", %{response: response_create}) do

@@ -31,6 +31,24 @@ defmodule ViverderirWeb.Router do
       delete "/delete", AccountsController, :delete
     end
 
+    scope "/configurations" do
+      get "/", ConfigurationsController, :index
+      get "/:id", ConfigurationsController, :detail
+      post "/", ConfigurationsController, :create
+      put "/:id", ConfigurationsController, :update
+      patch "/:id", ConfigurationsController, :patch
+      delete "/:id", ConfigurationsController, :delete
+    end
+
+    scope "/debts" do
+      get "/", DebtsController, :index
+      get "/:id", DebtsController, :detail
+      post "/", DebtsController, :create
+      put "/:id", DebtsController, :update
+      patch "/:id", DebtsController, :patch
+      delete "/:id", DebtsController, :delete
+    end
+
     scope "/events" do
       get "/", EventsController, :index
       get "/:id", EventsController, :detail
@@ -38,6 +56,24 @@ defmodule ViverderirWeb.Router do
       put "/:id", EventsController, :update
       patch "/:id", EventsController, :patch
       delete "/:id", EventsController, :delete
+    end
+
+    scope "/teams" do
+      get "/", TeamsController, :index
+      get "/:id", TeamsController, :detail
+      post "/", TeamsController, :create
+      put "/:id", TeamsController, :update
+      patch "/:id", TeamsController, :patch
+      delete "/:id", TeamsController, :delete
+    end
+
+    scope "/users" do
+      get "/", UsersController, :index
+      get "/:id", UsersController, :detail
+      post "/", UsersController, :create
+      put "/:id", UsersController, :update
+      patch "/:id", UsersController, :patch
+      delete "/:id", UsersController, :delete
     end
 
     scope "/volunteers" do

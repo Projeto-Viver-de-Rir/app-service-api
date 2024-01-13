@@ -1,4 +1,4 @@
-defmodule ViverderirWeb.Views.Request.AccountRequestView do
+defmodule ViverderirWeb.Views.Request.UserRequestView do
   alias Domain.Accounts
 
   require Logger
