@@ -27,6 +27,10 @@ defmodule ViverderirWeb.Router do
     plug :accepts, ["json"]
   end
 
+  pipeline :api_auth do
+    plug ViverderirWeb.Auth.Pipeline
+  end
+
   scope "/", ViverderirWeb do
     pipe_through :browser
 
@@ -37,9 +41,16 @@ defmodule ViverderirWeb.Router do
     pipe_through :api
 
     scope "/accounts" do
-      get "/", AccountsController, :get_me
       post "/sign-in", AccountsController, :sign_in
       post "/sign-up", AccountsController, :sign_up
+    end
+  end
+
+  scope "/api/v1", ViverderirWeb do
+    pipe_through [:api, :api_auth]
+
+    scope "/accounts" do
+      get "/", AccountsController, :get_me
       post "/sign-out", AccountsController, :sign_out
       delete "/delete", AccountsController, :delete
     end
