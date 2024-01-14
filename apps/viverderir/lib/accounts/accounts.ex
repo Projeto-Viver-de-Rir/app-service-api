@@ -16,6 +16,10 @@ defmodule ViverDeRir.Accounts do
     Accounts.fetch(account_id)
   end
 
+  def get_by_email(email) do
+    Accounts.get_by_email(email)
+  end
+
   def create_account(account, logged_user_id) do
     Accounts.create(account, logged_user_id)
   end

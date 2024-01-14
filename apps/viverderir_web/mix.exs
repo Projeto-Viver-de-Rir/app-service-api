@@ -51,6 +51,8 @@ defmodule ViverderirWeb.MixProject do
       {:jason, "~> 1.2"},
       {:plug_cowboy, "~> 2.5"},
       {:cors_plug, "~> 3.0"},
+      {:guardian, "~> 2.3"},
+      {:bcrypt_elixir, "~> 3.0"},
       {:viverderir, in_umbrella: true},
       {:domain, in_umbrella: true}
     ]

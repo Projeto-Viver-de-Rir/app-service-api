@@ -1,5 +1,18 @@
 defmodule ViverderirWeb.Router do
   use ViverderirWeb, :router
+  use Plug.ErrorHandler
+
+  defp handle_errors(conn, %{reason: %Phoenix.Router.NoRouteError{message: message}}) do
+    conn
+    |> json(%{errors: message})
+    |> halt()
+  end
+
+  defp handle_errors(conn, %{reason: %{message: message}}) do
+    conn
+    |> json(%{errors: message})
+    |> halt()
+  end
 
   pipeline :browser do
     plug :accepts, ["html"]
@@ -12,6 +25,11 @@ defmodule ViverderirWeb.Router do
 
   pipeline :api do
     plug :accepts, ["json"]
+    plug :fetch_session
+  end
+
+  pipeline :api_auth do
+    plug ViverderirWeb.Auth.Pipeline
   end
 
   scope "/", ViverderirWeb do
@@ -24,9 +42,16 @@ defmodule ViverderirWeb.Router do
     pipe_through :api
 
     scope "/accounts" do
-      get "/", AccountsController, :get_me
       post "/sign-in", AccountsController, :sign_in
       post "/sign-up", AccountsController, :sign_up
+    end
+  end
+
+  scope "/api/v1", ViverderirWeb do
+    pipe_through [:api, :api_auth]
+
+    scope "/accounts" do
+      get "/", AccountsController, :get_me
       post "/sign-out", AccountsController, :sign_out
       delete "/delete", AccountsController, :delete
     end
