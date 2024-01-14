@@ -92,6 +92,7 @@ defmodule Domain.Accounts do
 
     %__MODULE__{}
     |> cast(Map.from_struct(params), @all_fields)
+    |> set_password_hash()
   end
 
   @spec changeset(
@@ -112,6 +113,7 @@ defmodule Domain.Accounts do
       Map.from_struct(params),
       @all_fields -- [:created_at, :created_by, :deleted_at, :deleted_by]
     )
+    |> set_password_hash()
   end
 
   def changeset(previous_data, data, :delete, logged_user_id) do
@@ -126,4 +128,10 @@ defmodule Domain.Accounts do
     previous_data
     |> cast(Map.from_struct(params), [:updated_at, :updated_by, :deleted_at, :deleted_by])
   end
+
+  defp set_password_hash(%Ecto.Changeset{valid?: true, changes: %{password_hash: password_hash}} = changeset) do
+    change(changeset, password_hash: Bcrypt.hash_pwd_salt(password_hash))
+  end
+
+  defp set_password_hash(changeset), do: changeset
 end

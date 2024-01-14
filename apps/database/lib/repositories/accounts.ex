@@ -10,7 +10,7 @@ defmodule Database.Repositories.Accounts do
   require Logger
 
   @spec list_accounts(_filter :: map()) ::
-          {:ok, list(Configuration.t())} | {:error, map()}
+          {:ok, list(Accounts.t())} | {:error, map()}
   def list_accounts(_filter) do
     accounts =
       from(accounts in Accounts,
@@ -22,7 +22,7 @@ defmodule Database.Repositories.Accounts do
   end
 
   @spec fetch(id :: integer) ::
-          {:ok, list(Configuration.t())} | {:error, map()}
+          {:ok, list(Accounts.t())} | {:error, map()}
   def fetch(id) do
     from(accounts in Accounts,
       where: accounts.id == ^id
@@ -30,6 +30,19 @@ defmodule Database.Repositories.Accounts do
     |> Repo.one()
     |> case do
       nil -> {:not_found}
+      account -> {:ok, account}
+    end
+  end
+
+  @spec get_by_email(email :: String.t()) ::
+          {:ok, Accounts.t()} | {:error, :not_found}
+  def get_by_email(email) do
+    from(accounts in Accounts,
+      where: accounts.email == ^email
+    )
+    |> Repo.one()
+    |> case do
+      nil -> {:error, :not_found}
       account -> {:ok, account}
     end
   end

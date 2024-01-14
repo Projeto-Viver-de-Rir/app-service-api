@@ -39,6 +39,8 @@ defmodule Viverderir.MixProject do
       {:phoenix_pubsub, "~> 2.1"},
       {:swoosh, "~> 1.3"},
       {:finch, "~> 0.13"},
+      {:guardian, "~> 2.3"},
+      {:bcrypt_elixir, "~> 3.0"},
       {:database, in_umbrella: true}
     ]
   end

@@ -18,6 +18,10 @@ import Config
 # at the `config/runtime.exs`.
 config :viverderir, Viverderir.Mailer, adapter: Swoosh.Adapters.Local
 
+config :viverderir_web, ViverderirWeb.Auth.Guardian,
+  issuer: "viverderir_web",
+  secret_key: "uBfVCBSOD6MO5lr7JPzcFan38AD9KV+RSA5AxVpjoAPK18LBdhGXXlAtjktCSJmH"
+
 config :viverderir_web,
   generators: [context_app: :viverderir]
 
