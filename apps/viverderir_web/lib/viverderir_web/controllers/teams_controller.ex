@@ -39,9 +39,7 @@ defmodule ViverderirWeb.TeamsController do
 
   def create(conn, _params) do
     Logger.info("'Create' requested for teams controller.")
-
-    # TODO: extract from token or session
-    logged_user_id = "1"
+    logged_user_id = Integer.to_string(get_session(conn, :account_id))
 
     Map.get(conn, :body_params)
     |> TeamRequestView.to_domain_from_create_request()
@@ -70,9 +68,7 @@ defmodule ViverderirWeb.TeamsController do
 
   def update(conn, %{"id" => id}) do
     Logger.info("'Update' requested for teams controller.")
-
-    # TODO: extract from token or session
-    logged_user_id = "1"
+    logged_user_id = Integer.to_string(get_session(conn, :account_id))
 
     Map.get(conn, :body_params)
     |> TeamRequestView.to_domain_from_update_request(id)
@@ -110,9 +106,7 @@ defmodule ViverderirWeb.TeamsController do
 
   def delete(conn, %{"id" => id}) do
     Logger.info("'Delete' requested for teams controller.")
-
-    # TODO: extract from token or session
-    logged_user_id = "1"
+    logged_user_id = Integer.to_string(get_session(conn, :account_id))
 
     Teams.delete_team(id, logged_user_id)
 

@@ -46,9 +46,9 @@ defmodule ViverderirWeb.Auth.Guardian do
     Bcrypt.verify_pass(password, hash_password)
   end
 
-  defp create_token(user) do
-    {:ok, token, _claims} = Auth.Guardian.encode_and_sign(user, %{some: "claim"})
-    {:ok, token}
+  defp create_token(account) do
+    {:ok, token, _claims} = Auth.Guardian.encode_and_sign(account, %{some: "claim"})
+    {:ok, account, token}
   end
 
 end

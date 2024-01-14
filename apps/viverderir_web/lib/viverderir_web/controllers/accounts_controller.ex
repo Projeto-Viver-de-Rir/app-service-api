@@ -4,22 +4,34 @@ defmodule ViverderirWeb.AccountsController do
   require Logger
   alias ViverderirWeb.Auth.ErrorResponse
   alias ViverderirWeb.Auth.Guardian
+  alias ViverderirWeb.Views.Request.AccountsRequestView
   alias ViverderirWeb.Views.Response.AccountsResponseView
+  alias ViverDeRir.Accounts
 
   def get_me(conn, _params) do
-    item =
-      ~s({"account":{"id":1,"name":"Account 1","email":"account@account.com","email_confirmed":true,"photo":"string","password":"xxxxxxxxx","password_hash":"xxxxxxxxx","access_failed_count":0,"lockout":"xxxxxxxxx","created_at":"2019-01-01 00:00:00","created_by":"1","updated_at":"2019-01-01 00:00:00","updated_by":"1","deleted_at":null,"deleted_by":null}})
+    account_id = get_session(conn, :account_id)
 
-    conn
-    |> send_resp(200, item)
+    Accounts.get_account(account_id)
+    |> case do
+      {:ok, response} ->
+        conn
+        |> put_view(AccountsResponseView)
+        |> render("get_me.json", response: response)
+
+      {_, _} ->
+        conn
+        |> put_resp_content_type("application/json")
+        |> send_resp(500, "error")
+    end
   end
 
   def sign_in(conn, _params) do
     data = Map.get(conn, :body_params)
 
     case Guardian.authenticate(data["email"], data["password"]) do
-      {:ok, token} ->
+      {:ok, account, token} ->
         conn
+        |> put_session(:account_id, account.id)
         |> put_status(200)
         |> put_view(AccountsResponseView)
         |> render("account.json", response: token)
@@ -28,23 +40,41 @@ defmodule ViverderirWeb.AccountsController do
       end
   end
 
-  def sign_up(conn, %{"account" => account_params}) do
-    item =
-      ~s({"token": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJWaXZlci1EZS1SaXIiLCJpYXQiOjE2OTIxMDUwMTAsImV4cCI6MTcyMzY0MTAxMiwiYXVkIjoid3d3LnByb2pldG92aXZlcmRlcmlyLmNvbS5iciIsInN1YiI6ImFjY291bnRAYWNjb3VudC5jb20iLCJhY2NvdW50X2lkIjoiMSIsImFjY291bnRfbmFtZSI6IkFjY291bnQgMSIsImFjY291bnRfZW1haWwiOiJhY2NvdW50QGFjY291bnQuY29tIiwiYWNjb3VudF9wZXJtaXNzaW9ucyI6WyJhZG1pbmlzdHJhdG9yIiwibW9kZXJhdG9yIiwidm9sdW50ZWVyIl0sImFjY291bnRfcGhvdG8iOiJodHRwczovL2F2YXRhcnMuZ2l0aHVidXNlcmNvbnRlbnQuY29tL3UvMTgwNTEwNjA_dj00In0.BT-mZ3HD_hZyzb6blrfdpK9Hw-PB0qPZbtMfNV-LL1g"})
+  def sign_up(conn, _params) do
+    Map.get(conn, :body_params)
+    |> AccountsRequestView.to_domain_from_sign_up()
+    |> case do
+      {:ok, domain} ->
+        domain
+        |> Accounts.create_account("self")
+        |> case do
+          {:ok, _response} ->
+            conn
+            |> send_resp(201, "")
 
-    conn
-    |> send_resp(200, item)
+          {_, _} ->
+            conn
+            |> put_resp_content_type("application/json")
+            |> send_resp(500, "error")
+        end
+
+      {:error, _validation_errors} ->
+        conn
+        |> put_resp_content_type("application/json")
+        |> send_resp(400, "error")
+    end
   end
 
   def sign_out(conn, _params) do
-    item = ~s({"account":{}, "token": ""})
+    item = ~s({"token": ""})
 
     conn
+    |> put_session(:account_id, nil)
     |> send_resp(200, item)
   end
 
   def delete(conn, _params) do
-    item = ~s({"account":{}, "token": ""})
+    item = ~s({"token": ""})
 
     conn
     |> send_resp(204, item)

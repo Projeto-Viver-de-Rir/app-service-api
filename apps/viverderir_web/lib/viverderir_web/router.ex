@@ -25,6 +25,7 @@ defmodule ViverderirWeb.Router do
 
   pipeline :api do
     plug :accepts, ["json"]
+    plug :fetch_session
   end
 
   pipeline :api_auth do

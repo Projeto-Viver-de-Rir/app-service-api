@@ -39,9 +39,7 @@ defmodule ViverderirWeb.VolunteersController do
 
   def create(conn, _params) do
     Logger.info("'Create' requested for volunteers controller.")
-
-    # TODO: extract from token or session
-    logged_user_id = "1"
+    logged_user_id = Integer.to_string(get_session(conn, :account_id))
 
     Map.get(conn, :body_params)
     |> VolunteerRequestView.to_domain_from_create_request()
@@ -70,9 +68,7 @@ defmodule ViverderirWeb.VolunteersController do
 
   def update(conn, %{"id" => id}) do
     Logger.info("'Update' requested for volunteers controller.")
-
-    # TODO: extract from token or session
-    logged_user_id = "1"
+    logged_user_id = Integer.to_string(get_session(conn, :account_id))
 
     Map.get(conn, :body_params)
     |> VolunteerRequestView.to_domain_from_update_request(id)
@@ -110,9 +106,7 @@ defmodule ViverderirWeb.VolunteersController do
 
   def delete(conn, %{"id" => id}) do
     Logger.info("'Delete' requested for volunteers controller.")
-
-    # TODO: extract from token or session
-    logged_user_id = "1"
+    logged_user_id = Integer.to_string(get_session(conn, :account_id))
 
     Volunteers.delete_volunteer(id, logged_user_id)
 
