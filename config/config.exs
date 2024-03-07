@@ -1,13 +1,26 @@
-# This file is responsible for configuring your umbrella
-# and **all applications** and their dependencies with the
-# help of the Config module.
+# This file is responsible for configuring your application
+# and its dependencies with the aid of the Config module.
 #
-# Note that all applications in your umbrella share the
-# same configuration and dependencies, which is why they
-# all use the same configuration file. If you want different
-# configurations or dependencies per app, it is best to
-# move said applications out of the umbrella.
+# This configuration file is loaded before any dependency and
+# is restricted to this project.
+
+# General application configuration
 import Config
+
+config :viverderir,
+  ecto_repos: [Viverderir.Repo],
+  generators: [timestamp_type: :utc_datetime]
+
+# Configures the endpoint
+config :viverderir, ViverderirWeb.Endpoint,
+  url: [host: "localhost"],
+  adapter: Bandit.PhoenixAdapter,
+  render_errors: [
+    formats: [html: ViverderirWeb.ErrorHTML, json: ViverderirWeb.ErrorJSON],
+    layout: false
+  ],
+  pubsub_server: Viverderir.PubSub,
+  live_view: [signing_salt: "4r56W6Jc"]
 
 # Configures the mailer
 #
@@ -18,43 +31,26 @@ import Config
 # at the `config/runtime.exs`.
 config :viverderir, Viverderir.Mailer, adapter: Swoosh.Adapters.Local
 
-config :viverderir_web, ViverderirWeb.Auth.Guardian,
-  issuer: "viverderir_web",
-  secret_key: "uBfVCBSOD6MO5lr7JPzcFan38AD9KV+RSA5AxVpjoAPK18LBdhGXXlAtjktCSJmH"
-
-config :viverderir_web,
-  generators: [context_app: :viverderir]
-
-# Configures the endpoint
-config :viverderir_web, ViverderirWeb.Endpoint,
-  url: [host: "localhost"],
-  render_errors: [
-    formats: [html: ViverderirWeb.ErrorHTML, json: ViverderirWeb.ErrorJSON],
-    layout: false
-  ],
-  pubsub_server: Viverderir.PubSub,
-  live_view: [signing_salt: "WqVgEpH6"]
-
 # Configure esbuild (the version is required)
 config :esbuild,
-  version: "0.14.41",
-  default: [
+  version: "0.17.11",
+  viverderir: [
     args:
       ~w(js/app.js --bundle --target=es2017 --outdir=../priv/static/assets --external:/fonts/* --external:/images/*),
-    cd: Path.expand("../apps/viverderir_web/assets", __DIR__),
+    cd: Path.expand("../assets", __DIR__),
     env: %{"NODE_PATH" => Path.expand("../deps", __DIR__)}
   ]
 
 # Configure tailwind (the version is required)
 config :tailwind,
-  version: "3.2.4",
-  default: [
+  version: "3.4.0",
+  viverderir: [
     args: ~w(
       --config=tailwind.config.js
       --input=css/app.css
       --output=../priv/static/assets/app.css
     ),
-    cd: Path.expand("../apps/viverderir_web/assets", __DIR__)
+    cd: Path.expand("../assets", __DIR__)
   ]
 
 # Configures Elixir's Logger
@@ -64,8 +60,6 @@ config :logger, :console,
 
 # Use Jason for JSON parsing in Phoenix
 config :phoenix, :json_library, Jason
-
-config :database, :ecto_repos, [Database.Repo]
 
 # Import environment specific config. This must remain at the bottom
 # of this file so it overrides the configuration defined above.
